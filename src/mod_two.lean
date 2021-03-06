@@ -154,7 +154,7 @@ theorem mod_two_xsub_one_eq_mod_two_x_plus_one
   end
 end
 
-theorem abs_of_mod_two_sub_mod_to_of_sub_one_eq_one
+theorem abs_of_mod_two_sub_mod_two_of_sub_one_eq_one
 (x : ℝ)
 : abs (mod_two x - mod_two (x - 1)) = 1
 := begin

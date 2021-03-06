@@ -112,7 +112,7 @@ theorem dist_mod_two_eq_dist
     rw (abs_of_pos (sub_pos.mpr x_ge_y)) at h,
     have y_simp : y = x-1, by linarith,
     rw y_simp,
-    exact (abs_of_mod_two_sub_mod_to_of_sub_one_eq_one x),
+    exact (abs_of_mod_two_sub_mod_two_of_sub_one_eq_one x),
   },
   {
     have abs_simp : abs (x - y) = y - x, by { have := abs_sub x y, finish, },
@@ -120,7 +120,7 @@ theorem dist_mod_two_eq_dist
     have y_simp : x = y-1, by linarith,
     rw y_simp,
     rw abs_sub (mod_two (y - 1)) (mod_two y),
-    exact (abs_of_mod_two_sub_mod_to_of_sub_one_eq_one y),
+    exact (abs_of_mod_two_sub_mod_two_of_sub_one_eq_one y),
   }
 end
 
