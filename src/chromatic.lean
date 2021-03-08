@@ -36,7 +36,7 @@ theorem chrom_larger
   intro f1,
   refine exists.elim f1 _,
   intros k1 k2,
-  let hhh : ∀(a : X), k1 a < n+1 := begin
+  have : ∀(a : X), k1 a < n+1 := begin
     intro a,
     exact nat.lt.step (k2.left a),
   end,
@@ -51,10 +51,20 @@ theorem chrom_smaller
 := begin
   refine not_imp_not.mpr _,
   induction n,
-  simp,
+  exact id,
   intro k,
   exact chrom_larger X D _ k,
 end
+
+-- Is this in mathlib? Should it be?
+theorem ite_eq_false_imp_false
+(p : Prop) [decidable p]
+{X : Type*}
+{a b : X}
+(h : ite p a b = b)
+(h2 : a ≠ b)
+: ¬p
+:= by finish
 
 theorem chrom_of_real_line_bounded_contradiction
 {a b: ℝ}
@@ -73,8 +83,8 @@ theorem chrom_of_real_line_bounded_contradiction
   rw real.dist_eq at ᾰ,
   have hhha : a < 1 := bounding_mod_two a au al hat,
   have hhhb : b < 1 := bounding_mod_two b bu bl hbt,
-  have hpos : a - b < 1, by linarith,
-  have hpos_neg : -(a - b) < 1, by linarith,
+  have hpos : a - b < 1,            by linarith,
+  have hpos_neg : -(a - b) < 1,     by linarith,
   have abs_bound : abs (a - b) < 1, by { exact max_lt hpos hpos_neg },
   linarith,
 
@@ -83,17 +93,12 @@ theorem chrom_of_real_line_bounded_contradiction
 
   have hmta : ite (mod_two a < 1) 0 1 = 1, { exact if_neg haf },
   rw hmta at ᾰ_1,
-  have hbf : ¬(mod_two b < 1), by {
-    intros aaaa,
-    have dsmdkskd := ᾰ_1.symm,
-    simp at dsmdkskd,
-    exact dsmdkskd aaaa,
-  },
+  have hbf : ¬(mod_two b < 1) := ite_eq_false_imp_false (mod_two b < 1) ᾰ_1.symm zero_ne_one,
   rw (bounding_id b bu bl) at hbf,
   have haf_expand : ¬mod_two a < 1 := haf,
-  rw (bounding_id a au al) at haf_expand, 
-  have hpos : a - b < 1, by linarith,
-  have hpos_neg : -(a - b) < 1, by linarith,
+  rw (bounding_id a au al) at haf_expand,
+  have hpos : a - b < 1,            by linarith,
+  have hpos_neg : -(a - b) < 1,     by linarith,
   have abs_bound : abs (a - b) < 1, by { exact max_lt hpos hpos_neg },
   rw real.dist_eq at ᾰ,
   exact ne_of_lt abs_bound ᾰ,
@@ -141,11 +146,10 @@ theorem colorable_real_line_avoiding_one_with_two
   rw (if_neg H2),
   exact one_lt_two,
   rw [line_color, line_color] at ᾰ_1,
-  have alpha_modded : dist (mod_two a) (mod_two b) = 1 := dist_mod_two_eq_dist a b ᾰ,
   rw ←mod_two_idempotent a at ᾰ_1,
   rw ←mod_two_idempotent b at ᾰ_1,
   exact (chrom_of_real_line_bounded_contradiction
-    alpha_modded
+    (dist_mod_two_eq_dist a b ᾰ)
     ᾰ_1
     (ge_iff_le.mp (mod_two_geq_0 a))
     (mod_two_le_2 a)
